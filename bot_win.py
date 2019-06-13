@@ -29,9 +29,9 @@ def returned(e):
     global a, b
     if e.keysym == 'Return':
         if i == 1:
-            a = entry.get()
+            a = entry.get().lower()
         elif i == 2:
-            b = entry.get()
+            b = entry.get().lower()
         root.destroy()
 
 
