@@ -2,9 +2,12 @@ import sqlite3
 import random
 import tkinter as tk
 import sys
+from textblob import TextBlob
 
 WIDTH = 600
 HEIGHT = 300
+lang = 'ru'
+lst = ['red', 'light gray']
 
 conn = sqlite3.connect('txt.db')
 cur = conn.cursor()
@@ -14,6 +17,12 @@ cur.execute('create table if not exists tbl(quest text, answ text)')
 def closing():
     conn.close()
     sys.exit(0)
+
+
+def flash_leng():
+    lst.reverse()
+    l_leng.configure(fg=lst[0])
+    l_leng.after(250, flash_leng)
 
 
 def returned(e):
@@ -27,7 +36,7 @@ def returned(e):
 
 
 def input_(txt):
-    global entry, root
+    global entry, root, l_leng
     root = tk.Tk()
     root.title('Python Bot')
     root.iconphoto(True, tk.PhotoImage(file='ico.png'))
@@ -38,9 +47,13 @@ def input_(txt):
                         width=WIDTH, height=HEIGHT/2)
     lf1.pack_propagate(False)
     lf1.pack()
+    l_leng = tk.Label(lf1, font='arial 12 bold', fg='green3', text=lang)
+    l_leng.pack(anchor=tk.NE, padx=5)
+    if lang != 'ru':
+        flash_leng()
     entry = tk.Entry(lf1, font='arial 20 bold', fg='green', relief=tk.SUNKEN)
     entry.focus_force()
-    entry.pack(fill=tk.X, expand=True)
+    entry.pack(fill=tk.X, pady=5)
     if i == 3:
         if '?' in a:
             entry.insert(0, a)
@@ -65,6 +78,9 @@ while True:
     input_('Введите вопрос (Enter - выход): ')
     if not a:
         break
+    lang = TextBlob(a).detect_language()
+    if lang != 'ru':
+        continue
     cur.execute('select answ from tbl where quest==?', (a,))
     answers = [j[0] for j in cur.fetchall()]
     if not answers:
