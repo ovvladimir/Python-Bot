@@ -1,12 +1,12 @@
 import sqlite3
-import random
 import tkinter as tk
-import sys
 from textblob import TextBlob
+import random
+import sys
 
 WIDTH = 600
 HEIGHT = 300
-lang = 'ru'
+languages = 'ru'
 lst = ['red', 'light gray']
 
 conn = sqlite3.connect('txt.db')
@@ -19,38 +19,35 @@ def closing():
     sys.exit(0)
 
 
-def flash_leng():
+def flash_lng():
     lst.reverse()
-    l_leng.configure(fg=lst[0])
-    l_leng.after(250, flash_leng)
+    l3.configure(fg=lst[0])
+    l3.after(250, flash_lng)
 
 
-def returned(e):
-    global a, b
+def enter_on(e):
+    global a, b, loop
     if e.keysym == 'Return':
         if i == 1:
             a = entry.get().lower()
         elif i == 2:
             b = entry.get().lower()
-        root.destroy()
+        lf.destroy()
+        loop = False
 
 
-def input_(txt):
-    global entry, root, l_leng
-    root = tk.Tk()
-    root.title('Python Bot')
-    root.iconphoto(True, tk.PhotoImage(file='ico.png'))
-    root.geometry(f'{WIDTH}x{HEIGHT}+0+0')
-    root.protocol("WM_DELETE_WINDOW", closing)
-    root.bind('<Key>', returned)
-    lf1 = tk.LabelFrame(root, font='arial 20 bold', text=txt,
+def input_txt(txt):
+    global entry, l3, lf, loop
+    lf = tk.LabelFrame(root, width=WIDTH, height=HEIGHT)
+    lf.pack()
+    lf1 = tk.LabelFrame(lf, font='arial 20 bold', text=txt,
                         width=WIDTH, height=HEIGHT/2)
     lf1.pack_propagate(False)
     lf1.pack()
-    l_leng = tk.Label(lf1, font='arial 12 bold', fg='green3', text=lang)
-    l_leng.pack(anchor=tk.NE, padx=5)
-    if lang != 'ru':
-        flash_leng()
+    l3 = tk.Label(lf1, font='arial 12 bold', fg='green3', text=languages)
+    l3.pack(anchor=tk.NE, padx=5)
+    if languages != 'ru':
+        l3.after_idle(flash_lng)
     entry = tk.Entry(lf1, font='arial 20 bold', fg='green', relief=tk.SUNKEN)
     entry.focus_force()
     entry.pack(fill=tk.X, pady=5)
@@ -60,7 +57,7 @@ def input_(txt):
         else:
             entry.insert(0, f'{a}?')
         txt = 'Ответ: '
-        lf2 = tk.LabelFrame(root, font='arial 20 bold', text=txt,
+        lf2 = tk.LabelFrame(lf, font='arial 20 bold', text=txt,
                             width=WIDTH, height=HEIGHT/2)
         lf2.pack_propagate(False)
         lf2.pack()
@@ -70,29 +67,38 @@ def input_(txt):
                       text='Для продолжения нажмите Enter')
         l1.pack()
         l2.pack()
-    tk.mainloop()
+    loop = True
+    while loop:
+        lf.update()
 
+
+root = tk.Tk()
+root.title('Python Bot')
+root.iconphoto(True, tk.PhotoImage(file='ico.png'))
+root.geometry(f'{WIDTH}x{HEIGHT}+1+1')
+root.protocol("WM_DELETE_WINDOW", closing)
+root.bind('<Key>', enter_on)
 
 while True:
     i = 1
-    input_('Введите вопрос (Enter - выход): ')
+    input_txt('Введите вопрос (Enter - выход): ')
     if not a:
         break
-    lang = TextBlob(a).detect_language()
-    if lang != 'ru':
+    languages = TextBlob(a).detect_language()
+    if languages != 'ru':
         continue
     cur.execute('select answ from tbl where quest==?', (a,))
     answers = [j[0] for j in cur.fetchall()]
     if not answers:
         while True:
             i = 2
-            input_('Введите ответ (Enter - выход): ')
+            input_txt('Введите ответ (Enter - выход): ')
             if not b:
                 break
             cur.execute('insert into tbl values(?,?)', (a, b))
             conn.commit()
     else:
         i = 3
-        input_('Вопрос: ')
+        input_txt('Вопрос: ')
 
 closing()
