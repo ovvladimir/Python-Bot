@@ -12,6 +12,11 @@ lst = ['red', 'light gray']
 conn = sqlite3.connect('txt.db')
 cur = conn.cursor()
 cur.execute('create table if not exists tbl(quest text, answ text)')
+# dump
+file_dump = open('txt_dump.sql', 'w')
+for line in conn.iterdump():
+    file_dump.write('%s\n' % line)
+file_dump.close()
 
 
 def closing():
