@@ -1,0 +1,18 @@
+BEGIN TRANSACTION;
+CREATE TABLE tbl(quest text,answ text);
+INSERT INTO "tbl" VALUES('как дела','хорошо');
+INSERT INTO "tbl" VALUES('как дела','так себе');
+INSERT INTO "tbl" VALUES('как дела','бывало лучше');
+INSERT INTO "tbl" VALUES('как дела','прекрасно');
+INSERT INTO "tbl" VALUES('как теб€ зовут','Ѕот');
+INSERT INTO "tbl" VALUES(' ак погода?','почти лето');
+INSERT INTO "tbl" VALUES('как погода','солнечно');
+INSERT INTO "tbl" VALUES('как погода?','почти лето');
+INSERT INTO "tbl" VALUES('твой любимый цвет','зеленый');
+INSERT INTO "tbl" VALUES('как настроение','супер');
+INSERT INTO "tbl" VALUES('как € выгл€жу','хреново');
+INSERT INTO "tbl" VALUES('как € выгл€жу','отлично');
+INSERT INTO "tbl" VALUES('как € выгл€жу','класс');
+INSERT INTO "tbl" VALUES('как у теб€ дела','хорошо');
+INSERT INTO "tbl" VALUES('как жизнь','бывало лучше');
+COMMIT;
