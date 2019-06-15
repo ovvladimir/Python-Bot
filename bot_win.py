@@ -2,14 +2,11 @@ import sqlite3
 import tkinter as tk
 from textblob import TextBlob
 import random
-import sys
 
 WIDTH = 600
 HEIGHT = 300
 languages = 'ru'
 lst = ['red', 'light gray']
-a = None
-b = None
 
 conn = sqlite3.connect('txt.db')
 cur = conn.cursor()
@@ -22,11 +19,9 @@ file_dump.close()
 
 
 def closing():
-    global loop, run
     conn.close()
-    run = False
-    loop = False
-    sys.exit(0)
+    root.destroy()
+    exit()
 
 
 def flash_lng():
@@ -36,18 +31,18 @@ def flash_lng():
 
 
 def enter_on(e):
-    global a, b, loop
+    global a, b
     if e.keysym == 'Return':
         if i == 1:
             a = entry.get().lower()
         elif i == 2:
             b = entry.get().lower()
+        lf.quit()
         lf.destroy()
-        loop = False
 
 
 def input_txt(txt):
-    global entry, l3, lf, loop
+    global entry, l3, lf
     lf = tk.LabelFrame(root, width=WIDTH, height=HEIGHT)
     lf.pack()
     lf1 = tk.LabelFrame(lf, font='arial 20 bold', text=txt,
@@ -70,7 +65,6 @@ def input_txt(txt):
         lf2 = tk.LabelFrame(lf, font='arial 20 bold', text=txt,
                             width=WIDTH, height=HEIGHT/2)
         lf2.pack_propagate(False)
-        img = tk.PhotoImage(file='ico.png')
         l4 = tk.Label(lf2, image=img)
         l4.place(x=0, y=0)
         l1 = tk.Label(lf2, font='arial 30 bold', fg='blue',
@@ -80,20 +74,18 @@ def input_txt(txt):
         lf2.pack()
         l1.pack()
         l2.pack()
-    loop = True
-    while loop:
-        lf.update()
+    lf.mainloop()
 
 
 root = tk.Tk()
 root.title('Python Bot')
-root.iconphoto(True, tk.PhotoImage(file='ico.png'))
+img = tk.PhotoImage(file='ico.png')
+root.iconphoto(False, img)
 root.geometry(f'{WIDTH}x{HEIGHT}+1+1')
-root.protocol("WM_DELETE_WINDOW", closing)
+root.protocol('WM_DELETE_WINDOW', closing)
 root.bind('<Key>', enter_on)
 
-run = True
-while run:
+while True:
     i = 1
     input_txt('Введите вопрос (Enter - выход): ')
     if not a:
