@@ -8,6 +8,8 @@ WIDTH = 600
 HEIGHT = 300
 languages = 'ru'
 lst = ['red', 'light gray']
+a = None
+b = None
 
 conn = sqlite3.connect('txt.db')
 cur = conn.cursor()
@@ -20,7 +22,10 @@ file_dump.close()
 
 
 def closing():
+    global loop, run
     conn.close()
+    run = False
+    loop = False
     sys.exit(0)
 
 
@@ -65,11 +70,14 @@ def input_txt(txt):
         lf2 = tk.LabelFrame(lf, font='arial 20 bold', text=txt,
                             width=WIDTH, height=HEIGHT/2)
         lf2.pack_propagate(False)
-        lf2.pack()
+        img = tk.PhotoImage(file='ico.png')
+        l4 = tk.Label(lf2, image=img)
+        l4.place(x=0, y=0)
         l1 = tk.Label(lf2, font='arial 30 bold', fg='blue',
                       text=random.choice(answers))
         l2 = tk.Label(lf2, font='arial 10', fg='red',
                       text='Для продолжения нажмите Enter')
+        lf2.pack()
         l1.pack()
         l2.pack()
     loop = True
@@ -84,7 +92,8 @@ root.geometry(f'{WIDTH}x{HEIGHT}+1+1')
 root.protocol("WM_DELETE_WINDOW", closing)
 root.bind('<Key>', enter_on)
 
-while True:
+run = True
+while run:
     i = 1
     input_txt('Введите вопрос (Enter - выход): ')
     if not a:
