@@ -12,10 +12,9 @@ conn = sqlite3.connect('txt.db')
 cur = conn.cursor()
 cur.execute('create table if not exists tbl(quest text, answ text)')
 # dump
-file_dump = open('txt_dump.sql', 'w')
-for line in conn.iterdump():
-    file_dump.write('%s\n' % line)
-file_dump.close()
+with open('txt_dump.sql', 'w') as file_dump:
+    for line in conn.iterdump():
+        file_dump.write('%s\n' % line)
 
 
 def closing():
@@ -37,8 +36,8 @@ def enter_on(e):
             a = entry.get().lower()
         elif i == 2:
             b = entry.get().lower()
-        lf.quit()
         lf.destroy()
+        lf.quit()
 
 
 def input_txt(txt):
