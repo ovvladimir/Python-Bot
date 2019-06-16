@@ -2,6 +2,7 @@ import sqlite3
 import tkinter as tk
 from textblob import TextBlob
 import random
+import pyttsx3
 
 WIDTH = 600
 HEIGHT = 300
@@ -16,6 +17,8 @@ with open('txt_dump.sql', 'w') as file_dump:
     for line in conn.iterdump():
         file_dump.write('%s\n' % line)
 
+engine = pyttsx3.init(driverName='sapi5')
+
 
 def closing():
     conn.close()
@@ -27,6 +30,11 @@ def flash_lng():
     lst.reverse()
     l3.configure(fg=lst[0])
     l3.after(250, flash_lng)
+
+
+def voiсe(ramdom_answer):
+    engine.say(ramdom_answer)
+    engine.runAndWait()
 
 
 def enter_on(e):
@@ -64,15 +72,16 @@ def input_txt(txt):
         lf2 = tk.LabelFrame(lf, font='arial 20 bold', text=txt,
                             width=WIDTH, height=HEIGHT/2)
         lf2.pack_propagate(False)
+        lf2.pack()
         l4 = tk.Label(lf2, image=img)
         l4.place(x=0, y=0)
+        ramdom_answer = random.choice(answers)
         l1 = tk.Label(lf2, font='arial 30 bold', fg='blue',
-                      text=random.choice(answers))
+                      text=ramdom_answer).pack()
         l2 = tk.Label(lf2, font='arial 10', fg='red',
-                      text='Для продолжения нажмите Enter')
-        lf2.pack()
-        l1.pack()
-        l2.pack()
+                      text='Для продолжения нажмите Enter').pack()
+        lf.update()
+        voiсe(ramdom_answer)
     lf.mainloop()
 
 
