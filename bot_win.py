@@ -32,8 +32,8 @@ def flash_lng():
     l3.after(250, flash_lng)
 
 
-def voiсe(ramdom_answer):
-    engine.say(ramdom_answer)
+def speak(random_answer):
+    engine.say(random_answer)
     engine.runAndWait()
 
 
@@ -75,13 +75,15 @@ def input_txt(txt):
         lf2.pack()
         l4 = tk.Label(lf2, image=img)
         l4.place(x=0, y=0)
-        ramdom_answer = random.choice(answers)
+        random_answer = random.choice(answers)
         l1 = tk.Label(lf2, font='arial 30 bold', fg='blue',
-                      text=ramdom_answer).pack()
+                      text=random_answer)
+        l1.pack()
         l2 = tk.Label(lf2, font='arial 10', fg='red',
-                      text='Для продолжения нажмите Enter').pack()
+                      text='Для продолжения нажмите Enter')
+        l2.pack()
         lf.update()
-        voiсe(ramdom_answer)
+        speak(random_answer)
     lf.mainloop()
 
 
